@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Light Theme -->
+    <color name="blue_500_light">#1E88E5</color>
+    <color name="blue_700_light">#1976D2</color>
+    <color name="accent_light">#FF4081</color>
+
+    <!-- Dark Theme -->
+    <color name="blue_500_dark">#03A9F4</color>
+    <color name="blue_700_dark">#0288D1</color>
+    <color name="accent_dark">#FF4081</color>
+</resources>

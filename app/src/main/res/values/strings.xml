@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Farmasi Dinkes Minahasa</string>
+    <string name="app_desc">SUHU DAN KELEMBABAN GUDANG FARAMASI DINKES MINAHASA</string>
+    <string name="greeting">SELAMAT DATANG</string>
+    <string name="login">Login</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="dont_have_account">Don\'t have an account? Sign up</string>
+    <string name="back">kembali</string>
+    <string name="title">Title</string>
+    <string name="last_name">Last Name</string>
+    <string name="first_name">First Name</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="confirm_password">Confirm Password</string>
+</resources>
