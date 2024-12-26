@@ -26,8 +26,13 @@ class HomeActivity : AppCompatActivity() {
         applyInsetsToMainView()
 
         replaceFragment(HomeFragment())
-
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_nav)
+
+        if (savedInstanceState == null) {
+            replaceFragment(HomeFragment())
+            bottomNavigationView.selectedItemId = R.id.nav_home
+        }
+
         bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> {
@@ -53,6 +58,7 @@ class HomeActivity : AppCompatActivity() {
 
 
     private fun replaceFragment(fragment: Fragment) {
+
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.fragment_container, fragment)
