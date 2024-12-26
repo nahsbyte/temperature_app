@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,7 +7,7 @@
     tools:context=".HomeActivity"
     android:fitsSystemWindows="true">
 
-    <!-- FrameLayout untuk Menampilkan Fragment dan Icon Bell -->
+    <!-- FrameLayout untuk Menampilkan Fragment -->
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="0dp"
@@ -19,17 +18,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Bell Icon -->
-        <ImageView
-            android:id="@+id/bell_icon"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="end|top"
-            android:src="@drawable/ic_bell"
-            android:contentDescription="Notification Icon"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp" />
+        <!-- Tempat Fragmen Ditampilkan -->
     </FrameLayout>
+
+    <!-- Bell Icon yang Selalu Di Atas Fragmen -->
+    <ImageView
+        android:id="@+id/bell_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_bell"
+        android:contentDescription="Notification Icon"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp" />
 
     <!-- Bottom Navigation Bar -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
