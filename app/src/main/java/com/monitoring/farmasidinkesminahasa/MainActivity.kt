@@ -44,7 +44,8 @@ class MainActivity : AppCompatActivity() {
     private fun checkRedirection() {
         val isLoggedIn = sharedPreferencesHelper.getBoolean("is_logged_in", false)
         if (!isLoggedIn) {
-            startActivity(Intent(this, LoginActivity::class.java))
+//            startActivity(Intent(this, LoginActivity::class.java))
+            startActivity(Intent(this, HomeActivity::class.java))
             finish()
         }
     }

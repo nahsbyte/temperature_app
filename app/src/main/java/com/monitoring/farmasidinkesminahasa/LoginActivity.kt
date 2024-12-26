@@ -50,7 +50,6 @@ class LoginActivity : AppCompatActivity() {
 //            finish()
         }
 
-//        onbac
 
     }
 }

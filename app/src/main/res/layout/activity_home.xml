@@ -5,18 +5,31 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeActivity">
+    tools:context=".HomeActivity"
+    android:fitsSystemWindows="true">
 
-    <!-- Device Background (only color, no frame) -->
-    <View
-        android:id="@+id/device_background"
-        android:layout_width="match_parent"
-        android:layout_height="780dp"
-        android:background="@drawable/device"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <!-- FrameLayout untuk Menampilkan Fragment dan Icon Bell -->
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@android:color/white"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_nav"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Bell Icon -->
+        <ImageView
+            android:id="@+id/bell_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="end|top"
+            android:src="@drawable/ic_bell"
+            android:contentDescription="Notification Icon"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp" />
+    </FrameLayout>
 
     <!-- Bottom Navigation Bar -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -26,6 +39,6 @@
         app:menu="@menu/bottom_nav_bar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@android:color/white" />
 </androidx.constraintlayout.widget.ConstraintLayout>
