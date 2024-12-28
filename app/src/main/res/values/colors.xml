@@ -11,6 +11,10 @@
 
     <!-- Dark Theme -->
     <color name="blue_500_dark">#03A9F4</color>
+    <color name="purple">#9C27B0</color>
     <color name="blue_700_dark">#0288D1</color>
     <color name="accent_dark">#FF4081</color>
+
+    <color name="red">#FF3B30</color>
+    <color name="blue">#007AFF</color>
 </resources>

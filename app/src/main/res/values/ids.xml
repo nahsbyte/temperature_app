@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="paragraph" type="id" />
+    <item name="description" type="id" />
+    <item name="subTitle" type="id" />
+    <item name="imageView" type="id" />
+</resources>

@@ -2,14 +2,85 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
+    android:orientation="horizontal"
     android:background="@color/white"
-    android:orientation="vertical">
+    android:padding="60dp"
+    android:paddingTop="50dp"
+    android:gravity="center">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Home Fragment"
-        android:textSize="24sp"
-        android:textColor="@android:color/black"/>
+    <!-- Suhu Indicator -->
+    <RelativeLayout
+
+        android:layout_width="0dp"
+        android:layout_height="250dp"
+        android:layout_weight="1"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/tSuhu"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:text="Suhu"
+            android:textSize="24sp"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="16dp" />
+
+        <com.monitoring.farmasidinkesminahasa.view.CircularProgressView
+            android:id="@+id/suhuProgress"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_centerInParent="true" />
+
+        <TextView
+            android:id="@+id/suhuValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="46%"
+            android:textSize="24sp"
+            android:textColor="@android:color/black"
+            android:layout_centerInParent="true" />
+
+    </RelativeLayout>
+
+    <!-- Kelembapan Indicator -->
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="250dp"
+        android:layout_weight="1"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/tKelembapan"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:text="Kelembapan"
+            android:textSize="24sp"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="16dp" />
+
+        <com.monitoring.farmasidinkesminahasa.view.CircularProgressView
+            android:id="@+id/kelembapanProgress"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_centerInParent="true" />
+
+        <TextView
+            android:id="@+id/kelembapanValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="45%"
+            android:textSize="24sp"
+            android:textColor="@android:color/black"
+            android:layout_centerInParent="true" />
+
+    </RelativeLayout>
+
 </LinearLayout>
