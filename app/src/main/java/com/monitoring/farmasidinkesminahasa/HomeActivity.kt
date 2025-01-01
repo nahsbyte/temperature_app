@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.monitoring.farmasidinkesminahasa.fragment.HistoryFragment
 import com.monitoring.farmasidinkesminahasa.fragment.HomeFragment
+import com.monitoring.farmasidinkesminahasa.fragment.NotificationFragment
 import com.monitoring.farmasidinkesminahasa.fragment.ToolsFragment
 
 class HomeActivity : AppCompatActivity() {
@@ -29,6 +30,11 @@ class HomeActivity : AppCompatActivity() {
 
         replaceFragment(HomeFragment())
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_nav)
+        val bellIcon = findViewById<View>(R.id.bell_icon)
+        bellIcon.setOnClickListener {
+            Log.d("Navigation", "Notification clicked")
+            replaceFragment(NotificationFragment()) // Navigate to Notification Fragment
+        }
 
         if (savedInstanceState == null) {
             replaceFragment(HomeFragment())
