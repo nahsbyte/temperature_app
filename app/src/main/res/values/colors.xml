@@ -8,6 +8,9 @@
     <color name="blue_500_light">#1E88E5</color>
     <color name="blue_700_light">#1976D2</color>
     <color name="accent_light">#FF4081</color>
+    <color name="yellow">#FFFF00</color>
+    <color name="teal">#76C7C0</color>
+
 
     <!-- Dark Theme -->
     <color name="blue_500_dark">#03A9F4</color>
