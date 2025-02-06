@@ -50,6 +50,9 @@ dependencies {
     implementation(libs.mpandroidchart)
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson.converter)
+    implementation(libs.logging.interceptor) // Untuk logging request
+
+
 
 
 }

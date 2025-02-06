@@ -27,7 +27,7 @@ import com.github.mikephil.charting.highlight.Highlight
 import com.monitoring.farmasidinkesminahasa.R
 import com.monitoring.farmasidinkesminahasa.model.SensorResponse
 import com.monitoring.farmasidinkesminahasa.service.RetrofitClient
-import com.monitoring.farmasidinkesminahasa.service.SensorApiService
+import com.monitoring.farmasidinkesminahasa.service.ApiService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -70,10 +70,9 @@ class HistoryFragment : Fragment() {
     }
 
     private fun fetchDataFromApi() {
-        val service = RetrofitClient.createService(SensorApiService::class.java)
-        val call = service.getSensorData()
+        val service = RetrofitClient.instance.getSensorData()
 
-        call.enqueue(object : Callback<SensorResponse> {
+        service.enqueue(object : Callback<SensorResponse> {
             override fun onResponse(call: Call<SensorResponse>, response: Response<SensorResponse>) {
                 if (response.isSuccessful) {
                     val sensorResponse = response.body()

@@ -11,13 +11,11 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.monitoring.farmasidinkesminahasa.R
 import com.monitoring.farmasidinkesminahasa.model.SensorResponse
-import com.monitoring.farmasidinkesminahasa.service.SensorApiService
+import com.monitoring.farmasidinkesminahasa.service.RetrofitClient
 import com.monitoring.farmasidinkesminahasa.view.CircularProgressView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class HomeFragment : Fragment() {
 
@@ -47,15 +45,16 @@ class HomeFragment : Fragment() {
         return view
     }
 
-    private fun fetchSensorData(suhuProgress: CircularProgressView, kelembapanProgress: CircularProgressView) {
-        val retrofit = Retrofit.Builder()
-            .baseUrl("http://172.30.24.218:3000/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val apiService = retrofit.create(SensorApiService::class.java)
-        apiService.getSensorData().enqueue(object : Callback<SensorResponse> {
-            override fun onResponse(call: Call<SensorResponse>, response: Response<SensorResponse>) {
+    private fun fetchSensorData(
+        suhuProgress: CircularProgressView,
+        kelembapanProgress: CircularProgressView
+    ) {
+        val apiService = RetrofitClient.instance.getSensorData()
+        apiService.enqueue(object : Callback<SensorResponse> {
+            override fun onResponse(
+                call: Call<SensorResponse>,
+                response: Response<SensorResponse>
+            ) {
                 if (response.isSuccessful) {
                     val sensorData = response.body()
                     Log.d("APIResponse", "Response body: $sensorData")
