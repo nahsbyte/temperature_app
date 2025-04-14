@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -51,8 +52,6 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson.converter)
     implementation(libs.logging.interceptor) // Untuk logging request
-
-
-
-
+    implementation(libs.firebase.bom)
+    implementation(libs.firebase.analytics)
 }

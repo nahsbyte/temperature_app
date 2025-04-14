@@ -6,7 +6,7 @@ import retrofit2.Call
 import retrofit2.http.GET
 
 interface ApiService {
-    @GET("/sensor")
+    @GET("/read_sensor")
     fun getSensorData(): Call<SensorResponse>
     @GET("/tools")
     fun getTools(): Call<ToolsResponse>

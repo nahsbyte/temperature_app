@@ -27,7 +27,6 @@ import com.github.mikephil.charting.highlight.Highlight
 import com.monitoring.farmasidinkesminahasa.R
 import com.monitoring.farmasidinkesminahasa.model.SensorResponse
 import com.monitoring.farmasidinkesminahasa.service.RetrofitClient
-import com.monitoring.farmasidinkesminahasa.service.ApiService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -251,7 +250,7 @@ class HistoryFragment : Fragment() {
 }
 
 // Custom Marker View for Highlighting
-class CustomMarkerView(context: Context, layoutResource: Int) : MarkerView(context, layoutResource) {
+class CustomMarkerView(context: Context, layoutResource: Int) : MarkerView(context, layoutResource){
 
     private val paint = Paint().apply {
         color = Color.YELLOW

@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "685570428970",
+    "firebase_url": "https://temperatureapp-94d6a-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "temperatureapp-94d6a",
+    "storage_bucket": "temperatureapp-94d6a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:685570428970:android:b58d5a486d63922eaff353",
+        "android_client_info": {
+          "package_name": "com.monitoring.farmasidinkesminahasa"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDojsd0-DbvGU6XkP-RvLu6TzzsB0HMinw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
