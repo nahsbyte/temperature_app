@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -44,6 +45,7 @@ class HistoryFragment : Fragment() {
     private lateinit var listView: ListView
     private lateinit var lineChart: LineChart
     private lateinit var rvPeriodOption: RecyclerView
+    private lateinit var cv6: CardView
     private var allHistoryData: List<com.monitoring.farmasidinkesminahasa.model.HistoryItemResponse>? =
         null
     private var selectedIndex: Int = -1  // Track the selected index from ListView
@@ -58,6 +60,16 @@ class HistoryFragment : Fragment() {
         listView = view.findViewById(R.id.listView)
         lineChart = view.findViewById(R.id.lineChart)
         rvPeriodOption = view.findViewById(R.id.rvPeriodOption)
+        cv6 = view.findViewById(R.id.cv6)
+        cv6.setOnClickListener {
+            Toast.makeText(context, "Clicked", Toast.LENGTH_SHORT).show()
+            // pindah ke ReportMenuFragment
+            val reportMenuFragment = ReportMenuFragment()
+            val transaction = requireActivity().supportFragmentManager.beginTransaction()
+            transaction.replace(R.id.fragment_container, reportMenuFragment)
+            transaction.addToBackStack(null)
+            transaction.commit()
+        }
 
         setupPeriodOption(requireContext())
 
@@ -117,7 +129,6 @@ class HistoryFragment : Fragment() {
         rvPeriodOption.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         rvPeriodOption.adapter = adapter
-
     }
 
     private fun setupMarkerView() {
