@@ -17,6 +17,7 @@ mpandroidchart = "v3.1.0"
 retrofit = "2.9.0"
 gsonConverter = "2.9.0"
 uiDesktop = "1.7.0"
+jxl = "2.6.12"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -35,6 +36,7 @@ mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-gson-converter = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "gsonConverter" }
 androidx-ui-desktop = { group = "androidx.compose.ui", name = "ui-desktop", version.ref = "uiDesktop" }
+jexcelapi = { group = "net.sourceforge.jexcelapi", name = "jxl", version.ref = "jxl" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

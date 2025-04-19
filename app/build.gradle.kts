@@ -54,4 +54,5 @@ dependencies {
     implementation(libs.logging.interceptor) // Untuk logging request
     implementation(libs.firebase.bom)
     implementation(libs.firebase.analytics)
+    implementation(libs.jexcelapi)
 }

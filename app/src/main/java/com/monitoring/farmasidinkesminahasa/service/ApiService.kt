@@ -13,7 +13,7 @@ interface ApiService {
 //    @GET("/read_sensor")
 //    fun getSensorData(): Call<SensorResponse>
 //
-    @GET("/tools")
+    @GET("/sensor/tools")
     fun getTools(): Call<ToolsResponse>
 
     @GET("/sensor/firebase/latest")

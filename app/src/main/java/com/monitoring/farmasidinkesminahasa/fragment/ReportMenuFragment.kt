@@ -96,12 +96,20 @@ class ReportMenuFragment : Fragment() {
             Log.d("SELECTED", "Start: ${selectedMonth.startDate}, End: ${selectedMonth.endDate}")
 
             // Kirim ke HistoryDataFragment, atau panggil API:
-//            val call = RetrofitClient.instance.postPeriodConfig(periodConfigRequest)
-//
-//            apiService.getHistorySensorData(
-//                start = selectedMonth.startDate,
-//                end = selectedMonth.endDate
-//            )
+            val bundle = Bundle().apply {
+                putString("label", selectedMonth.label)
+                putString("startDate", selectedMonth.startDate)
+                putString("endDate", selectedMonth.endDate)
+            }
+
+            val fragment = MonthlyHistoryFragment()
+
+            fragment.arguments = bundle
+
+            val transaction = requireActivity().supportFragmentManager.beginTransaction()
+            transaction.replace(R.id.fragment_container, fragment)
+            transaction.addToBackStack(null)
+            transaction.commit()
         }
         rvReportMenu.layoutManager = LinearLayoutManager(requireContext())
         rvReportMenu.adapter = adapter
