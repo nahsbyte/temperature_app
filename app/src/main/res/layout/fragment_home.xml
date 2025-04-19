@@ -248,12 +248,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:orientation="horizontal"
         android:gravity="center"
+        android:orientation="horizontal"
         android:paddingStart="32dp"
         android:paddingEnd="32dp"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layoutSuhu">
 
         <TextView
@@ -261,13 +261,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Kipas Pendingin" />
+            android:text="Kipas Pendingin"
+            android:textColor="@color/black" />
 
         <Switch
             android:id="@+id/switchKipas"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"/>
+            android:layout_marginEnd="16dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -275,12 +276,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:orientation="horizontal"
         android:gravity="center"
+        android:orientation="horizontal"
         android:paddingStart="32dp"
         android:paddingEnd="32dp"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layoutKipas">
 
         <TextView
@@ -288,13 +289,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Pemanas Ruangan" />
+            android:text="Pemanas Ruangan"
+            android:textColor="@color/black" />
 
         <Switch
             android:id="@+id/switchPemanas"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"/>
+            android:layout_marginEnd="16dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -302,12 +304,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:orientation="horizontal"
         android:gravity="center"
+        android:orientation="horizontal"
         android:paddingStart="32dp"
         android:paddingEnd="32dp"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layoutPemanas">
 
         <TextView
@@ -315,12 +317,13 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Uap Air" />
+            android:text="Uap Air"
+            android:textColor="@color/black" />
 
         <Switch
             android:id="@+id/switchUap"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"/>
+            android:layout_marginEnd="16dp" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

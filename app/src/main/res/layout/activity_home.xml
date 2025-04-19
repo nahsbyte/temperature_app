@@ -4,44 +4,42 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeActivity"
-    android:fitsSystemWindows="true">
+    tools:context=".HomeActivity">
 
-    <!-- FrameLayout untuk Menampilkan Fragment -->
+    <!-- Toolbar / AppBar -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/topAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.Material3.Dark.ActionBar"
+        android:title="Beranda"
+        android:titleTextColor="@android:color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:menu="@menu/top_app_bar_menu" />
+
+    <!-- Fragment Container -->
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@android:color/white"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_nav"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <!-- Tempat Fragmen Ditampilkan -->
-    </FrameLayout>
-
-    <!-- Bell Icon yang Selalu Di Atas Fragmen -->
-    <ImageView
-        android:id="@+id/bell_icon"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/ic_bell"
-        android:contentDescription="Notification Icon"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottom_nav"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topAppBar" />
 
-    <!-- Bottom Navigation Bar -->
+    <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@android:color/white"
         app:itemTextColor="@color/nav_item_text_color"
-        app:menu="@menu/bottom_nav_bar"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:background="@android:color/white" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/bottom_nav_bar" />
 </androidx.constraintlayout.widget.ConstraintLayout>

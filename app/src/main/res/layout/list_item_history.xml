@@ -1,11 +1,78 @@
-<?xml version="1.0" encoding="utf-8"?>
+<!-- res/layout/list_item_history.xml -->
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    card_view:cardCornerRadius="12dp"
+    card_view:cardElevation="4dp">
 
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/textView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:padding="16dp"
-        android:textSize="16sp"
-        android:textColor="@color/black" />
+        android:background="@android:color/white">
 
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Timestamp"
+            android:textSize="14sp"
+            android:textColor="#000000"
+            android:gravity="center"/>
 
+        <!-- Vertical divider -->
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#CCCCCC"
+            android:layout_marginHorizontal="8dp"/>
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Timestamp"
+            android:textSize="14sp"
+            android:textColor="#000000"
+            android:gravity="center"/>
+
+        <!-- Vertical divider -->
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#CCCCCC"
+            android:layout_marginHorizontal="8dp"/>
+
+        <TextView
+            android:id="@+id/humidity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Kelembaban"
+            android:textSize="14sp"
+            android:textColor="#000000"
+            android:gravity="center"/>
+
+        <!-- Vertical divider -->
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#CCCCCC"
+            android:layout_marginHorizontal="8dp"/>
+
+        <TextView
+            android:id="@+id/temperature"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Suhu"
+            android:textSize="14sp"
+            android:textColor="#000000"
+            android:gravity="center"/>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

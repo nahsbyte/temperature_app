@@ -1,9 +1,7 @@
 package com.monitoring.farmasidinkesminahasa.fragment
 
 import android.content.Context
-import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.Paint
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.StateListDrawable
 import android.os.Bundle
@@ -14,10 +12,12 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -25,19 +25,27 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.monitoring.farmasidinkesminahasa.R
-import com.monitoring.farmasidinkesminahasa.model.SensorResponse
+import com.monitoring.farmasidinkesminahasa.adapter.PeriodConfigAdapter
+import com.monitoring.farmasidinkesminahasa.interfaces.CustomMarkerView
+import com.monitoring.farmasidinkesminahasa.model.HistoryItemResponse
+import com.monitoring.farmasidinkesminahasa.model.PeriodConfigRequest
+import com.monitoring.farmasidinkesminahasa.model.PeriodOption
 import com.monitoring.farmasidinkesminahasa.service.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 class HistoryFragment : Fragment() {
 
     private lateinit var listView: ListView
     private lateinit var lineChart: LineChart
-    private var allHistoryData: List<com.monitoring.farmasidinkesminahasa.model.HistoryItem>? = null
+    private lateinit var rvPeriodOption: RecyclerView
+    private var allHistoryData: List<com.monitoring.farmasidinkesminahasa.model.HistoryItemResponse>? =
+        null
     private var selectedIndex: Int = -1  // Track the selected index from ListView
 
     override fun onCreateView(
@@ -49,6 +57,9 @@ class HistoryFragment : Fragment() {
 
         listView = view.findViewById(R.id.listView)
         lineChart = view.findViewById(R.id.lineChart)
+        rvPeriodOption = view.findViewById(R.id.rvPeriodOption)
+
+        setupPeriodOption(requireContext())
 
         // Fetch data from API
         fetchDataFromApi()
@@ -63,53 +74,130 @@ class HistoryFragment : Fragment() {
         return view
     }
 
+    private fun setupPeriodOption(context: Context) {
+        val options = listOf(
+            PeriodOption("5 detik"),
+            PeriodOption("1 Menit"),
+            PeriodOption("5 Menit"),
+            PeriodOption("10 Menit"),
+            PeriodOption("1 Jam")
+        )
+        var periodConfigRequest = PeriodConfigRequest(period = 5000)
+
+
+        val adapter = PeriodConfigAdapter(options) { selectedOption ->
+            Toast.makeText(context, "Dipilih: ${selectedOption.label}", Toast.LENGTH_SHORT).show()
+            // Lakukan POST request di sini jika perlu
+
+            if (selectedOption.label == "5 detik") {
+                periodConfigRequest = PeriodConfigRequest(period = 5000)
+            } else if (selectedOption.label == "1 Menit") {
+                periodConfigRequest = PeriodConfigRequest(period = 60000)
+            } else if (selectedOption.label == "5 Menit") {
+                periodConfigRequest = PeriodConfigRequest(period = 300000)
+            } else if (selectedOption.label == "10 Menit") {
+                periodConfigRequest = PeriodConfigRequest(period = 600000)
+            } else if (selectedOption.label == "1 Jam") {
+                periodConfigRequest = PeriodConfigRequest(period = 3600000)
+            }
+
+            val call = RetrofitClient.instance.postPeriodConfig(periodConfigRequest)
+
+            call.enqueue(object : Callback<Void>{
+                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                    Log.d("HistoryFragment", "API Response: ${response.body()}")
+                }
+
+                override fun onFailure(call: Call<Void>, response: Throwable) {
+                    Log.e("HistoryFragment", "Network Failure: ${response.message}")
+                }
+            })
+        }
+
+        rvPeriodOption.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        rvPeriodOption.adapter = adapter
+
+    }
+
     private fun setupMarkerView() {
         val markerView = CustomMarkerView(requireContext(), R.layout.marker_view)
         lineChart.marker = markerView
     }
 
     private fun fetchDataFromApi() {
-        val service = RetrofitClient.instance.getSensorData()
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val calendar = Calendar.getInstance()
 
-        service.enqueue(object : Callback<SensorResponse> {
-            override fun onResponse(call: Call<SensorResponse>, response: Response<SensorResponse>) {
+        // Set start date to the 1st day of current month
+        calendar.set(Calendar.DAY_OF_MONTH, 1)
+        val startDate = sdf.format(calendar.time)
+
+        // Set end date to today
+        calendar.time = Date()
+        val endDate = sdf.format(calendar.time)
+
+        val call = RetrofitClient.instance.getHistorySensorData(startDate, endDate)
+
+        call.enqueue(object : Callback<List<HistoryItemResponse>> {
+            override fun onResponse(
+                call: Call<List<HistoryItemResponse>>,
+                response: Response<List<HistoryItemResponse>>
+            ) {
                 if (response.isSuccessful) {
-                    val sensorResponse = response.body()
-                    sensorResponse?.let {
-                        allHistoryData = it.History
-                        updateListView(it.History)
-                        updateLineChart(it.History)
+                    val data = response.body()
+                    data?.let {
+                        allHistoryData = it
+                        updateListView(it)
+                        updateLineChart(it)
                     }
                 } else {
-                    Log.e("HistoryFragment", "Response failed: ${response.code()}")
+                    Log.e("HistoryFragment", "API Error: ${response.code()}")
                 }
             }
 
-            override fun onFailure(call: Call<SensorResponse>, t: Throwable) {
-                Log.e("HistoryFragment", "API call failed: ${t.message}")
+            override fun onFailure(call: Call<List<HistoryItemResponse>>, t: Throwable) {
+                Log.e("HistoryFragment", "Network Failure: ${t.message}")
             }
         })
     }
 
-    private fun updateListView(history: List<com.monitoring.farmasidinkesminahasa.model.HistoryItem>) {
-        val listData = history.map {
-            "Timestamp: ${it.Timestamp}\n" +
-                    "Kelembaban: ${it.Kelembaban}%\n" +
-                    "Suhu: ${it.Suhu}°C\n" +
-                    "Control: ${it.Control}"
-        }
-
-        val adapter = object : ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, listData) {
+    private fun updateListView(history: List<HistoryItemResponse>) {
+        val adapter = object : ArrayAdapter<HistoryItemResponse>(
+            requireContext(),
+            R.layout.list_item_history,
+            history
+        ) {
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                val view = super.getView(position, convertView, parent)
-                val textView = view.findViewById<TextView>(android.R.id.text1)
-                textView.setTextColor(Color.BLACK)
-                textView.textSize = 16f
-                textView.setPadding(16, 16, 16, 16)
+                val view = convertView ?: LayoutInflater.from(context)
+                    .inflate(R.layout.list_item_history, parent, false)
 
-                val drawable = StateListDrawable()
-                drawable.addState(intArrayOf(android.R.attr.state_pressed), ColorDrawable(Color.LTGRAY))
-                drawable.addState(intArrayOf(), ColorDrawable(Color.WHITE))
+                val item = getItem(position)
+
+                // Get the TextViews from the layout
+                val dateView = view.findViewById<TextView>(R.id.date)
+                val timeView = view.findViewById<TextView>(R.id.time)
+                val humidityView = view.findViewById<TextView>(R.id.humidity)
+                val temperatureView = view.findViewById<TextView>(R.id.temperature)
+
+                // Format timestamp
+                val formattedDate = convertTimestampToDate(item?.timestamp ?: 0)
+                val formattedTime = convertTimestampToTime(item?.timestamp ?: 0)
+
+                // Set the data into TextViews
+                dateView.text = "$formattedDate"
+                timeView.text = "$formattedTime"
+                humidityView.text = "${item?.humidity}%"
+                temperatureView.text = "${item?.temperature}°C"
+
+                // Set up a clickable background effect
+                val drawable = StateListDrawable().apply {
+                    addState(
+                        intArrayOf(android.R.attr.state_pressed),
+                        ColorDrawable(Color.LTGRAY)
+                    )
+                    addState(intArrayOf(), ColorDrawable(Color.WHITE))
+                }
                 view.background = drawable
 
                 return view
@@ -129,7 +217,19 @@ class HistoryFragment : Fragment() {
         }
     }
 
-    private fun updateLineChart(history: List<com.monitoring.farmasidinkesminahasa.model.HistoryItem>) {
+    private fun convertTimestampToDate(timestamp: Long): String {
+        val date = Date(timestamp)
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        return dateFormat.format(date)
+    }
+
+    private fun convertTimestampToTime(timestamp: Long): String {
+        val date = Date(timestamp)
+        val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+        return timeFormat.format(date)
+    }
+
+    private fun updateLineChart(history: List<HistoryItemResponse>) {
         if (history.isEmpty()) {
             lineChart.clear()
             lineChart.setNoDataText("No data available")
@@ -142,17 +242,25 @@ class HistoryFragment : Fragment() {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
 
         history.forEachIndexed { index, item ->
-            val timestampDate = dateFormat.parse(item.Timestamp)
-            timestampDate?.let {
-                val timestamp = (it.time / 1000).toFloat()
-                suhuEntries.add(Entry(index.toFloat(), item.Suhu.toFloat()))
-                kelembabanEntries.add(Entry(index.toFloat(), item.Kelembaban.toFloat()))
+            val timestampDate = Date(item.timestamp) // Directly using the timestamp if it's epoch
+            // Use SimpleDateFormat for date and time formatting
+//            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()) // For date
+//            val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault()) // For time
+
+            // Format the date and time separately
+            val formattedDate = dateFormat.format(timestampDate)
+
+//            val timestampDate = dateFormat.parse(item.timestamp.toString())
+            formattedDate?.let {
+                suhuEntries.add(Entry(index.toFloat(), item.temperature.toFloat()))
+                kelembabanEntries.add(Entry(index.toFloat(), item.humidity.toFloat()))
             }
         }
 
         // Suhu Data Set
         val suhuDataSet = LineDataSet(suhuEntries, "Suhu").apply {
-            color = ContextCompat.getColor(requireContext(), R.color.red) // Red color for temperature
+            color =
+                ContextCompat.getColor(requireContext(), R.color.red) // Red color for temperature
             setDrawCircles(false)  // Initially do not draw circles
             circleRadius = 4f
             setDrawValues(false)
@@ -162,7 +270,8 @@ class HistoryFragment : Fragment() {
 
         // Kelembaban Data Set
         val kelembabanDataSet = LineDataSet(kelembabanEntries, "Kelembaban").apply {
-            color = ContextCompat.getColor(requireContext(), R.color.blue) // Blue color for humidity
+            color =
+                ContextCompat.getColor(requireContext(), R.color.blue) // Blue color for humidity
             setDrawCircles(false)  // Initially do not draw circles
             circleRadius = 4f
             setDrawValues(false)
@@ -178,7 +287,12 @@ class HistoryFragment : Fragment() {
                 if (selectedIndex != -1) {
                     val selectedPoint = suhuEntries[selectedIndex]
                     selectedPoint.apply {
-                        setCircleColor(ContextCompat.getColor(requireContext(), R.color.red)) // Highlight with yellow color
+                        setCircleColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.red
+                            )
+                        ) // Highlight with yellow color
                         circleRadius = 4f
                         mode = LineDataSet.Mode.CUBIC_BEZIER
                         lineWidth = 2f
@@ -193,7 +307,12 @@ class HistoryFragment : Fragment() {
                 if (selectedIndex != -1) {
                     val selectedPoint = kelembabanEntries[selectedIndex]
                     selectedPoint.apply {
-                        setCircleColor(ContextCompat.getColor(requireContext(), R.color.blue)) // Highlight with yellow color
+                        setCircleColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.blue
+                            )
+                        ) // Highlight with yellow color
                         circleRadius = 4f
                         mode = LineDataSet.Mode.CUBIC_BEZIER
                         lineWidth = 2f
@@ -231,49 +350,19 @@ class HistoryFragment : Fragment() {
     private fun highlightPointOnChart(position: Int) {
         allHistoryData?.let { history ->
             val selectedItem = history[position]
-            val timestamp = selectedItem.Timestamp
+            val timestamp = selectedItem.timestamp
 
             // Create a highlight for the selected point
-            val highlight = Highlight(position.toFloat(), selectedItem.Suhu.toFloat(), 0)
+            val highlight = Highlight(position.toFloat(), selectedItem.temperature.toFloat(), 0)
 
             // Highlight the specific point in the chart
             lineChart.highlightValue(highlight, true)
 
             // Update the marker with the Timestamp
             val markerView = lineChart.marker as CustomMarkerView
-            markerView.updateTimestamp(timestamp)
+            markerView.updateTimestamp(timestamp.toString())
 
             lineChart.invalidate()  // Refresh the chart to show the selected point
         }
-    }
-
-}
-
-// Custom Marker View for Highlighting
-class CustomMarkerView(context: Context, layoutResource: Int) : MarkerView(context, layoutResource){
-
-    private val paint = Paint().apply {
-        color = Color.YELLOW
-        strokeWidth = 3f
-        isAntiAlias = true
-    }
-
-    // Add a reference to the TextView for displaying the Timestamp
-    private val timestampTextView: TextView = findViewById(R.id.markerText)
-
-    override fun draw(canvas: Canvas, posX: Float, posY: Float) {
-        super.draw(canvas, posX, posY)
-
-        // Ensure the types are compatible
-        val startY = 0f
-        val endY = height.toFloat()
-
-        // Draw a vertical yellow line at the highlighted position (posX)
-        canvas.drawLine(posX, startY, posX, endY, paint)
-    }
-
-    // Update the Timestamp in the marker's TextView
-    fun updateTimestamp(timestamp: String) {
-        timestampTextView.text = timestamp
     }
 }

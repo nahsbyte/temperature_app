@@ -12,26 +12,24 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.monitoring.farmasidinkesminahasa.R
-import com.monitoring.farmasidinkesminahasa.model.SensorResponse
-import com.monitoring.farmasidinkesminahasa.service.ApiService
+import com.monitoring.farmasidinkesminahasa.model.HistoryItemResponse
 import com.monitoring.farmasidinkesminahasa.service.RetrofitClient
 import com.monitoring.farmasidinkesminahasa.view.CircularProgressView
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class NotificationFragment : Fragment() {
 
     private lateinit var suhuValue: TextView
     private lateinit var kelembapanValue: TextView
     private lateinit var listView: ListView
-    private var allHistoryData: List<com.monitoring.farmasidinkesminahasa.model.HistoryItem>? = null
+    private var allHistoryData: List<com.monitoring.farmasidinkesminahasa.model.HistoryItemResponse>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,43 +48,48 @@ class NotificationFragment : Fragment() {
 
 
         // Fetch data from API
-        fetchSensorData(suhuProgress, kelembapanProgress)
         fetchDataFromApi()
 
         return view
     }
 
     private fun fetchDataFromApi() {
-        val service = RetrofitClient.instance.getSensorData()
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val calendar = Calendar.getInstance()
 
-        service.enqueue(object : Callback<SensorResponse> {
+        val endDate = sdf.format(calendar.time)
+        calendar.add(Calendar.DAY_OF_MONTH, -1)
+        val startDate = sdf.format(calendar.time)
+
+        val service = RetrofitClient.instance.getHistorySensorData(startDate, endDate)
+
+        service.enqueue(object : Callback<List<HistoryItemResponse>> {
             override fun onResponse(
-                call: Call<SensorResponse>,
-                response: Response<SensorResponse>
+                call: Call<List<HistoryItemResponse>>,
+                response: Response<List<HistoryItemResponse>>
             ) {
                 if (response.isSuccessful) {
                     val sensorResponse = response.body()
                     sensorResponse?.let {
-                        allHistoryData = it.History
-                        updateListView(it.History)
+                        allHistoryData = it
+                        updateListView(it)
                     }
                 } else {
                     Log.e("HistoryFragment", "Response failed: ${response.code()}")
                 }
             }
 
-            override fun onFailure(call: Call<SensorResponse>, t: Throwable) {
+            override fun onFailure(call: Call<List<HistoryItemResponse>>, t: Throwable) {
                 Log.e("HistoryFragment", "API call failed: ${t.message}")
             }
         })
     }
 
-    private fun updateListView(history: List<com.monitoring.farmasidinkesminahasa.model.HistoryItem>) {
+    private fun updateListView(history: List<com.monitoring.farmasidinkesminahasa.model.HistoryItemResponse>) {
         val listData = history.map {
-            "Timestamp: ${it.Timestamp}\n" +
-                    "Kelembaban: ${it.Kelembaban}%\n" +
-                    "Suhu: ${it.Suhu}°C\n" +
-                    "Control: ${it.Control}"
+            "Timestamp: ${it.timestamp}\n" +
+                    "Kelembaban: ${it.humidity}%\n" +
+                    "Suhu: ${it.temperature}°C\n"
         }
 
         val adapter = object :
@@ -112,51 +115,6 @@ class NotificationFragment : Fragment() {
 
         listView.adapter = adapter
 
-    }
-
-    private fun fetchSensorData(
-        suhuProgress: CircularProgressView,
-        kelembapanProgress: CircularProgressView
-    ) {
-
-            val apiService = RetrofitClient.instance.getSensorData()
-
-            apiService.enqueue(object : Callback<SensorResponse> {
-                override fun onResponse(
-                    call: Call<SensorResponse>,
-                    response: Response<SensorResponse>
-                ) {
-                    if (response.isSuccessful) {
-                        val sensorData = response.body()
-                        Log.d("APIResponse", "Response body: $sensorData")
-
-                        if (sensorData != null) {
-                            // Update progress views
-                            animateProgress(suhuProgress, sensorData.Suhu.toFloat())
-                            animateProgress(kelembapanProgress, sensorData.Kelembaban.toFloat())
-
-                            // Update TextView values
-                            suhuValue.text = "${sensorData.Suhu}°C"
-                            kelembapanValue.text = "${sensorData.Kelembaban}%"
-                        } else {
-                            view?.context?.let {
-                                Toast.makeText(it, "Data kosong", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                    } else {
-                        view?.context?.let {
-                            Toast.makeText(it, "Gagal mengambil data", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
-
-                override fun onFailure(call: Call<SensorResponse>, t: Throwable) {
-                    view?.context?.let {
-                        Toast.makeText(it, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
-                        Log.e("NetworkError", "Failed to fetch data: ${t.message}", t)
-                    }
-                }
-            })
     }
 
     private fun animateProgress(progressView: CircularProgressView, targetValue: Float) {

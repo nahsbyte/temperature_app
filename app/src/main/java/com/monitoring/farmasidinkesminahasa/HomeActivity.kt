@@ -1,6 +1,5 @@
 package com.monitoring.farmasidinkesminahasa
 
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -8,12 +7,10 @@ import android.util.Log
 import android.view.View
 import android.view.WindowInsetsController
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.monitoring.farmasidinkesminahasa.fragment.HistoryFragment
 import com.monitoring.farmasidinkesminahasa.fragment.HomeFragment
@@ -30,11 +27,30 @@ class HomeActivity : AppCompatActivity() {
 
         replaceFragment(HomeFragment())
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_nav)
-        val bellIcon = findViewById<View>(R.id.bell_icon)
-        bellIcon.setOnClickListener {
-            Log.d("Navigation", "Notification clicked")
-            replaceFragment(NotificationFragment()) // Navigate to Notification Fragment
+        val toolbar = findViewById<MaterialToolbar>(R.id.topAppBar)
+
+        ViewCompat.setOnApplyWindowInsetsListener(toolbar) { view, insets ->
+            val topInset = insets.getInsets(WindowInsetsCompat.Type.systemBars()).top
+            view.setPadding(0, topInset, 0, 0)
+            insets
         }
+
+        toolbar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.action_notifications -> {
+                    Log.d("Navigation", "Notification clicked")
+                    replaceFragment(NotificationFragment()) // Navigate to Notification Fragment
+                    true
+                }
+
+                else -> false
+            }
+        }
+//        val bellIcon = findViewById<View>(R.id.bell_icon)
+//        bellIcon.setOnClickListener {
+//            Log.d("Navigation", "Notification clicked")
+//            replaceFragment(NotificationFragment()) // Navigate to Notification Fragment
+//        }
 
         if (savedInstanceState == null) {
             replaceFragment(HomeFragment())
@@ -48,16 +64,19 @@ class HomeActivity : AppCompatActivity() {
                     replaceFragment(HomeFragment())
                     true
                 }
+
                 R.id.nav_history -> {
                     Log.d("Navigation", "History clicked")
                     replaceFragment(HistoryFragment())
                     true
                 }
+
                 R.id.nav_tools -> {
                     Log.d("Navigation", "Tools clicked")
                     replaceFragment(ToolsFragment())
                     true
                 }
+
                 else -> false
             }
         }
@@ -95,7 +114,7 @@ class HomeActivity : AppCompatActivity() {
 
     private fun applyInsetsToMainView() {
         val mainView = findViewById<View>(R.id.main)
-        val bellIcon = findViewById<View>(R.id.bell_icon)
+//        val bellIcon = findViewById<View>(R.id.bell_icon)
 
         ViewCompat.setOnApplyWindowInsetsListener(mainView) { _, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -109,7 +128,7 @@ class HomeActivity : AppCompatActivity() {
             )
 
             // Geser bell_icon agar tidak terhalang status bar
-            bellIcon.translationY = systemBars.top.toFloat()
+//            bellIcon.translationY = systemBars.top.toFloat()
             insets
         }
     }

@@ -10,7 +10,7 @@ import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import com.monitoring.farmasidinkesminahasa.R
-import com.monitoring.farmasidinkesminahasa.model.SensorResponse
+import com.monitoring.farmasidinkesminahasa.model.HistoryItemResponse
 import com.monitoring.farmasidinkesminahasa.service.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback
@@ -113,11 +113,11 @@ class HomeFragment : Fragment() {
     }
 
     private fun fetchSensorData() {
-        val apiService = RetrofitClient.instance.getSensorData()
-        apiService.enqueue(object : Callback<SensorResponse> {
+        val apiService = RetrofitClient.instance.getLatestSensorData()
+        apiService.enqueue(object : Callback<HistoryItemResponse> {
             override fun onResponse(
-                call: Call<SensorResponse>,
-                response: Response<SensorResponse>
+                call: Call<HistoryItemResponse>,
+                response: Response<HistoryItemResponse>
             ) {
                 currentSuhu = 0.toFloat() // Update currentSuhu
                 currentKelembaban = 0.toFloat() // Update currentSuhu
@@ -130,8 +130,8 @@ class HomeFragment : Fragment() {
 
                     if (sensorData != null) {
                         // Update TextView values
-                        currentSuhu = sensorData.Suhu.toFloat() // Update currentSuhu
-                        currentKelembaban = sensorData.Kelembaban.toFloat() // Update currentSuhu
+                        currentSuhu = sensorData.temperature.toFloat() // Update currentSuhu
+                        currentKelembaban = sensorData.humidity.toFloat() // Update currentSuhu
                         realSuhu = currentSuhu
                         realKelembaban = currentSuhu
                         suhuValue.text = "${currentSuhu}°C"
@@ -148,7 +148,7 @@ class HomeFragment : Fragment() {
                 }
             }
 
-            override fun onFailure(call: Call<SensorResponse>, t: Throwable) {
+            override fun onFailure(call: Call<HistoryItemResponse>, t: Throwable) {
                 view?.context?.let {
                     Toast.makeText(it, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
                     Log.e("NetworkError", "Failed to fetch data: ${t.message}", t)
