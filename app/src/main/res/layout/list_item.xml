@@ -40,15 +40,6 @@
                 android:layout_marginTop="8dp" />
 
             <TextView
-                android:id="@+id/subTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Sub Title"
-                android:textSize="16sp"
-                android:textColor="@android:color/darker_gray"
-                android:layout_marginTop="4dp" />
-
-            <TextView
                 android:id="@+id/description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -56,16 +47,6 @@
                 android:textSize="14sp"
                 android:textColor="@android:color/black"
                 android:layout_marginTop="8dp" />
-
-            <TextView
-                android:id="@+id/paragraph"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="This is a paragraph"
-                android:textSize="14sp"
-                android:textColor="@android:color/black"
-                android:layout_marginTop="8dp" />
-
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

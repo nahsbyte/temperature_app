@@ -2,7 +2,7 @@ package com.monitoring.farmasidinkesminahasa.service
 
 import com.monitoring.farmasidinkesminahasa.model.PeriodConfigRequest
 import com.monitoring.farmasidinkesminahasa.model.HistoryItemResponse
-import com.monitoring.farmasidinkesminahasa.model.ToolsResponse
+import com.monitoring.farmasidinkesminahasa.model.Tool
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -14,7 +14,7 @@ interface ApiService {
 //    fun getSensorData(): Call<SensorResponse>
 //
     @GET("/sensor/tools")
-    fun getTools(): Call<ToolsResponse>
+    fun getTools(): Call<List<Tool>>
 
     @GET("/sensor/firebase/latest")
     fun getLatestSensorData(): Call<HistoryItemResponse>

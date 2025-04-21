@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.monitoring.farmasidinkesminahasa.R
 import com.monitoring.farmasidinkesminahasa.adapter.ListViewAdapterTools
-import com.monitoring.farmasidinkesminahasa.model.ToolsResponse
+import com.monitoring.farmasidinkesminahasa.model.Tool
 import com.monitoring.farmasidinkesminahasa.service.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback
@@ -42,16 +42,16 @@ class ToolsFragment : Fragment() {
             // Create a Retrofit client
             val service = RetrofitClient.instance.getTools()
 
-            service.enqueue(object : Callback<ToolsResponse> {
+            service.enqueue(object : Callback<List<Tool>> {
                 override fun onResponse(
-                    call: Call<ToolsResponse>,
-                    response: Response<ToolsResponse>
+                    call: Call<List<Tool>>,
+                    response: Response<List<Tool>>
                 ) {
                     if (response.isSuccessful) {
-                        val tools = response.body()?.tools
+                        val tools = response.body()
                         if (tools != null) {
                             // If the response is successful, extract the body
-                            val toolsList = response.body()?.tools ?: emptyList()
+                            val toolsList = response.body() ?: emptyList()
 
                             view?.context?.let {
                                 if (toolsList.isEmpty()) {
@@ -61,16 +61,14 @@ class ToolsFragment : Fragment() {
                                         View.VISIBLE
                                 } else {
                                     // If there is data, populate the ListView
-                                    val listData = toolsList.map {
+                                    val listData = arrayListOf(
                                         hashMapOf(
-                                            "title" to it.name,
-                                            "subTitle" to it.name,
-                                            "description" to it.description,
-                                            "paragraph" to it.description
+                                            "title" to "Judul",
+                                            "description" to "Deskripsi singkat",
+                                            "imageUrl" to "https://example.com/image.jpg"
                                         )
-                                    }
-                                    adapter =
-                                        ListViewAdapterTools(requireContext(), ArrayList(listData))
+                                    )
+                                    adapter = ListViewAdapterTools(requireContext(), ArrayList(toolsList))
                                     listView.adapter = adapter
 
                                     // Show ListView and hide "No data" message
@@ -85,8 +83,8 @@ class ToolsFragment : Fragment() {
                     }
                 }
 
-                override fun onFailure(call: Call<ToolsResponse>, t: Throwable) {
-                    Log.e("HistoryFragment", "API call failed: ${t.message}")
+                override fun onFailure(call: Call<List<Tool>>, t: Throwable) {
+                    Log.e("ToolsFragment", "API call failed: ${t.message}")
                 }
             })
         } catch (e: Exception) {

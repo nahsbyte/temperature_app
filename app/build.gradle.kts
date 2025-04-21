@@ -55,4 +55,6 @@ dependencies {
     implementation(libs.firebase.bom)
     implementation(libs.firebase.analytics)
     implementation(libs.jexcelapi)
+    implementation(libs.glide)
+
 }
