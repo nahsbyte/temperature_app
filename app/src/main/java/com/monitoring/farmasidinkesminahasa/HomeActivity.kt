@@ -1,5 +1,7 @@
 package com.monitoring.farmasidinkesminahasa
 
+import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -12,19 +14,23 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.messaging.FirebaseMessaging
 import com.monitoring.farmasidinkesminahasa.fragment.HistoryFragment
 import com.monitoring.farmasidinkesminahasa.fragment.HomeFragment
 import com.monitoring.farmasidinkesminahasa.fragment.NotificationFragment
 import com.monitoring.farmasidinkesminahasa.fragment.ToolsFragment
 
 class HomeActivity : AppCompatActivity() {
+    private var body: String? = null
+    private var fromFcm: Boolean = false
+    lateinit var context: Context
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
         setupFullscreenLayout()
         applyInsetsToMainView()
-
+        context = this
         replaceFragment(HomeFragment())
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_nav)
         val toolbar = findViewById<MaterialToolbar>(R.id.topAppBar)
@@ -39,18 +45,13 @@ class HomeActivity : AppCompatActivity() {
             when (it.itemId) {
                 R.id.action_notifications -> {
                     Log.d("Navigation", "Notification clicked")
-                    replaceFragment(NotificationFragment()) // Navigate to Notification Fragment
+                    replaceFragment(NotificationFragment(null)) // Navigate to Notification Fragment
                     true
                 }
 
                 else -> false
             }
         }
-//        val bellIcon = findViewById<View>(R.id.bell_icon)
-//        bellIcon.setOnClickListener {
-//            Log.d("Navigation", "Notification clicked")
-//            replaceFragment(NotificationFragment()) // Navigate to Notification Fragment
-//        }
 
         if (savedInstanceState == null) {
             replaceFragment(HomeFragment())
@@ -81,8 +82,29 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w("FCM", "Fetching FCM registration token failed", task.exception)
+                return@addOnCompleteListener
+            }
+
+            // Dapatkan token FCM
+            val token = task.result
+            Log.d("FCM", "Device FCM Token: $token")
+
+            // Kirim ke server kamu kalau perlu
+        }
+        handleFcmIntentIfAvailable(intent)
     }
 
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        intent.let { handleFcmIntentIfAvailable(it) }
+    }
+
+    override fun onResume() {
+        super.onResume()
+    }
 
     private fun replaceFragment(fragment: Fragment) {
 
@@ -97,17 +119,15 @@ class HomeActivity : AppCompatActivity() {
             window.setDecorFitsSystemWindows(false)
             window.insetsController?.apply {
                 setSystemBarsAppearance(
-                    0,
-                    WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+                    0, WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
                 )
             }
             window.statusBarColor = Color.TRANSPARENT // Pastikan ini transparan
         } else {
-            @Suppress("DEPRECATION")
-            window.decorView.systemUiVisibility =
+            @Suppress("DEPRECATION") window.decorView.systemUiVisibility =
                 View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-            @Suppress("DEPRECATION")
-            window.statusBarColor = Color.TRANSPARENT // Pastikan ini transparan
+            @Suppress("DEPRECATION") window.statusBarColor =
+                Color.TRANSPARENT // Pastikan ini transparan
         }
     }
 
@@ -130,6 +150,15 @@ class HomeActivity : AppCompatActivity() {
             // Geser bell_icon agar tidak terhalang status bar
 //            bellIcon.translationY = systemBars.top.toFloat()
             insets
+        }
+    }
+
+    private fun handleFcmIntentIfAvailable(intent: Intent) {
+        val fromFcm = intent.getBooleanExtra("from_fcm", false)
+        val body = intent.getStringExtra("message_body")
+
+        if (fromFcm && body != null) {
+            replaceFragment(NotificationFragment(body))
         }
     }
 

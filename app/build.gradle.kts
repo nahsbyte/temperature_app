@@ -45,6 +45,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.ui.desktop)
+    implementation(libs.androidx.work.runtime.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -53,8 +54,10 @@ dependencies {
     implementation(libs.retrofit.gson.converter)
     implementation(libs.logging.interceptor) // Untuk logging request
     implementation(libs.firebase.bom)
+    implementation(libs.firebase.messaging)
     implementation(libs.firebase.analytics)
     implementation(libs.jexcelapi)
     implementation(libs.glide)
+    implementation(libs.dnsoverhttps)
 
 }

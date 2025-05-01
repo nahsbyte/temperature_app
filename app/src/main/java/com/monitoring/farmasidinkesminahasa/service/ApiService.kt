@@ -2,11 +2,13 @@ package com.monitoring.farmasidinkesminahasa.service
 
 import com.monitoring.farmasidinkesminahasa.model.PeriodConfigRequest
 import com.monitoring.farmasidinkesminahasa.model.HistoryItemResponse
+import com.monitoring.farmasidinkesminahasa.model.NtfyMessage
 import com.monitoring.farmasidinkesminahasa.model.Tool
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {

@@ -17,6 +17,7 @@ import com.monitoring.farmasidinkesminahasa.R
 import com.monitoring.farmasidinkesminahasa.model.HistoryItemResponse
 import com.monitoring.farmasidinkesminahasa.service.RetrofitClient
 import com.monitoring.farmasidinkesminahasa.view.CircularProgressView
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -24,12 +25,12 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-class NotificationFragment : Fragment() {
-
+class NotificationFragment(private val payloadJson: String? = null) : Fragment() {
     private lateinit var suhuValue: TextView
     private lateinit var kelembapanValue: TextView
     private lateinit var listView: ListView
-    private var allHistoryData: List<com.monitoring.farmasidinkesminahasa.model.HistoryItemResponse>? = null
+    private var allHistoryData: List<com.monitoring.farmasidinkesminahasa.model.HistoryItemResponse>? =
+        null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,17 +39,23 @@ class NotificationFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_notification, container, false)
 
-        val suhuProgress: CircularProgressView = view.findViewById(R.id.suhuProgress)
-        val kelembapanProgress: CircularProgressView = view.findViewById(R.id.kelembapanProgress)
-
-        // Inisialisasi TextView
-        listView = view.findViewById(R.id.listView)
         suhuValue = view.findViewById(R.id.suhuValue)
         kelembapanValue = view.findViewById(R.id.kelembapanValue)
+        listView = view.findViewById(R.id.listView)
 
+        val jsonObject = payloadJson?.let { JSONObject(it) }
+        val suhu = jsonObject?.optString("temperature") ?: "-"
+        val kelembapan = jsonObject?.optString("humidity") ?: "-"
+        val pesan = jsonObject?.optString("message") ?: "Tidak ada pesan"
 
-        // Fetch data from API
-        fetchDataFromApi()
+        // Tampilkan suhu dan kelembaban ke TextView
+        suhuValue.text = "$suhu°C"
+        kelembapanValue.text = "$kelembapan%"
+
+        // Tambahkan ke ListView jika perlu
+        val list = listOf("📌 Notifikasi: $pesan\nSuhu: $suhu°C\nKelembapan: $kelembapan%")
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, list)
+        listView.adapter = adapter
 
         return view
     }
