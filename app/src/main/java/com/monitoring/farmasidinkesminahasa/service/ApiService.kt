@@ -29,4 +29,10 @@ interface ApiService {
         @Query("start") start: String,  // format: YYYY-MM-DD
         @Query("end") end: String       // format: YYYY-MM-DD
     ): Call<List<HistoryItemResponse>>
+
+    @POST("/sensor/wifi-config")
+    fun updateWifiConfig(
+        @Query("ssid") ssid: String,
+        @Query("password") password: String
+    ): Call<Void>
 }

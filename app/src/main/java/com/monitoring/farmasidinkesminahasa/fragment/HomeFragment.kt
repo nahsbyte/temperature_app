@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
@@ -27,6 +28,7 @@ class HomeFragment : Fragment() {
     private lateinit var cvKPlus: CardView
     private lateinit var cvKReset: CardView
     private lateinit var cvKMin: CardView
+    private lateinit var btnSettings: ImageButton
 
     private var currentSuhu: Float = 0f
     private var realSuhu: Float = 0f
@@ -52,6 +54,7 @@ class HomeFragment : Fragment() {
         cvKPlus = view.findViewById(R.id.cvKPlus)
         cvKReset = view.findViewById(R.id.cvKReset)
         cvKMin = view.findViewById(R.id.cvKMin)
+        btnSettings = view.findViewById(R.id.btnSettings)
 
         // Fetch data from API
         fetchSensorData()
@@ -79,6 +82,14 @@ class HomeFragment : Fragment() {
         cvKMin.setOnClickListener {
             minValue(1.0f, false)
         }
+
+        btnSettings.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, SettingsFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
         return view
     }
 

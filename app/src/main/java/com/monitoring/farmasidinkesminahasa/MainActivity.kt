@@ -1,6 +1,5 @@
 package com.monitoring.farmasidinkesminahasa
 
-import SharedPreferencesHelper
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -17,6 +16,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.messaging.FirebaseMessaging
+import com.monitoring.farmasidinkesminahasa.helper.SharedPreferencesHelper
 
 class MainActivity : AppCompatActivity() {
     private val sharedPreferencesHelper by lazy {

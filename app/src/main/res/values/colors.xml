@@ -1,24 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="grey">#FF888888</color>
+    <!-- Primary Colors -->
+    <color name="primary">#1976D2</color>
+    <color name="primary_dark">#1565C0</color>
+    <color name="primary_light">#42A5F5</color>
+    <color name="accent">#FF4081</color>
 
-    <!-- Light Theme -->
-    <color name="blue_500_light">#1E88E5</color>
+    <!-- Text Colors -->
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="text_hint">#9E9E9E</color>
+    <color name="text_disabled">#BDBDBD</color>
+
+    <!-- Background Colors -->
+    <color name="background">#FFFFFF</color>
+    <color name="background_light">#F5F5F5</color>
+    <color name="card_background">#FFFFFF</color>
+    <color name="divider">#E0E0E0</color>
+
+    <!-- Status Colors -->
+    <color name="success">#4CAF50</color>
+    <color name="success_light">#81C784</color>
+    <color name="error">#F44336</color>
+    <color name="error_light">#E57373</color>
+    <color name="warning">#FFC107</color>
+    <color name="warning_light">#FFD54F</color>
+    <color name="info">#2196F3</color>
+    <color name="info_light">#64B5F6</color>
+
+    <!-- Basic Colors -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="grey">#757575</color>
+    <color name="grey_light">#EEEEEE</color>
+    <color name="grey_dark">#424242</color>
+
+    <!-- Theme Specific Colors -->
+    <color name="blue_500_light">#2196F3</color>
     <color name="blue_700_light">#1976D2</color>
     <color name="accent_light">#FF4081</color>
-    <color name="yellow">#FFFF00</color>
-    <color name="teal">#76C7C0</color>
+    <color name="blue_500_dark">#64B5F6</color>
+    <color name="blue_700_dark">#42A5F5</color>
+    <color name="accent_dark">#FF80AB</color>
 
-
-    <!-- Dark Theme -->
-    <color name="blue_500_dark">#03A9F4</color>
+    <!-- Additional Colors -->
+    <color name="teal">#009688</color>
     <color name="purple">#9C27B0</color>
-    <color name="blue_700_dark">#0288D1</color>
-    <color name="accent_dark">#FF4081</color>
-
-    <color name="red">#FF3B30</color>
-    <color name="blue">#007AFF</color>
-    <color name="green">#11FF00</color>
+    <color name="yellow">#FFEB3B</color>
+    <color name="red">#F44336</color>
+    <color name="blue">#2196F3</color>
+    <color name="green">#4CAF50</color>
 </resources>

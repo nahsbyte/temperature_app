@@ -1,10 +1,12 @@
+package com.monitoring.farmasidinkesminahasa.helper
+
 import android.content.Context
 import android.content.SharedPreferences
 
 class SharedPreferencesHelper(context: Context) {
 
     private val sharedPreferences: SharedPreferences =
-        context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        context.getSharedPreferences("farmasi_prefs", Context.MODE_PRIVATE)
 
     fun saveBoolean(key: String, value: Boolean) {
         sharedPreferences.edit().putBoolean(key, value).apply()
@@ -18,8 +20,8 @@ class SharedPreferencesHelper(context: Context) {
         sharedPreferences.edit().putString(key, value).apply()
     }
 
-    fun getString(key: String, defaultValue: String? = null): String? {
-        return sharedPreferences.getString(key, defaultValue)
+    fun getString(key: String, defaultValue: String = ""): String {
+        return sharedPreferences.getString(key, defaultValue) ?: defaultValue
     }
 
     fun saveInt(key: String, value: Int) {
