@@ -10,7 +10,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
+import com.google.android.material.switchmaterial.SwitchMaterial
 import com.monitoring.farmasidinkesminahasa.R
+import com.monitoring.farmasidinkesminahasa.model.ConfigRequest
 import com.monitoring.farmasidinkesminahasa.model.HistoryItemResponse
 import com.monitoring.farmasidinkesminahasa.service.RetrofitClient
 import retrofit2.Call
@@ -29,6 +31,9 @@ class HomeFragment : Fragment() {
     private lateinit var cvKReset: CardView
     private lateinit var cvKMin: CardView
     private lateinit var btnSettings: ImageButton
+    private lateinit var switchKipas: SwitchMaterial
+    private lateinit var switchPemanas: SwitchMaterial
+    private lateinit var switchUap: SwitchMaterial
 
     private var currentSuhu: Float = 0f
     private var realSuhu: Float = 0f
@@ -61,33 +66,55 @@ class HomeFragment : Fragment() {
 
         cvSPlus.setOnClickListener {
             addValue(1.0f, true)
-        }
-
-        cvSReset.setOnClickListener {
-            resetValue(true)
+            updateConfig(true, currentSuhu, false)
         }
 
         cvSMin.setOnClickListener {
             minValue(1.0f, true)
+            updateConfig(true, currentSuhu, false)
         }
 
         cvKPlus.setOnClickListener {
             addValue(1.0f, false)
-        }
-
-        cvKReset.setOnClickListener {
-            resetValue(false)
+            updateConfig(false, currentKelembaban, false)
         }
 
         cvKMin.setOnClickListener {
             minValue(1.0f, false)
+            updateConfig(false, currentKelembaban, false)
+        }
+
+        cvSReset.setOnClickListener {
+            resetValue(true)
+            updateConfig(true, 0f, true)
+            fetchSensorData()
+        }
+
+        cvKReset.setOnClickListener {
+            resetValue(false)
+            updateConfig(false, 0f, true)
+            fetchSensorData()
         }
 
         btnSettings.setOnClickListener {
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, SettingsFragment())
+                .replace(R.id.fragment_container, SettingFragment())
                 .addToBackStack(null)
                 .commit()
+        }
+
+        switchKipas = view.findViewById(R.id.switchKipas)
+        switchPemanas = view.findViewById(R.id.switchPemanas)
+        switchUap = view.findViewById(R.id.switchUap)
+
+        switchKipas.setOnCheckedChangeListener { _, isChecked ->
+            updateManualDeviceConfig("fan", isChecked)
+        }
+        switchPemanas.setOnCheckedChangeListener { _, isChecked ->
+            updateManualDeviceConfig("heater", isChecked)
+        }
+        switchUap.setOnCheckedChangeListener { _, isChecked ->
+            updateManualDeviceConfig("humidifier", isChecked)
         }
 
         return view
@@ -121,6 +148,83 @@ class HomeFragment : Fragment() {
             currentKelembaban -= increment
             kelembapanValue.text = "${currentKelembaban}°C"
         }
+    }
+
+    private fun updateManualDeviceConfig(device: String, isOn: Boolean) {
+        val configRequest = ConfigRequest(
+            period = null,
+            ssid = null,
+            password = null,
+            is_periodic_sensor = null,
+            manual_fan = if (device == "fan") isOn else null,
+            manual_heater = if (device == "heater") isOn else null,
+            manual_humidifier = if (device == "humidifier") isOn else null,
+            manual_humidity = null,
+            manual_temp = null
+        )
+
+        RetrofitClient.instance.postConfig(configRequest).enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                // Optionally handle success
+                if (response.isSuccessful) {
+                    view?.context?.let {
+                        Toast.makeText(it, "Pengaturan $device berhasil diperbarui", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                } else {
+                    view?.context?.let {
+                        Toast.makeText(it, "Gagal memperbarui pengaturan $device", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+            }
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                // Optionally handle error
+                view?.context?.let {
+                    Toast.makeText(it, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                    Log.e("NetworkError", "Failed to update $device config: ${t.message}", t)
+                }
+            }
+        })
+    }
+
+    private fun updateConfig(isSuhu: Boolean, value: Float, isPeriodic: Boolean) {
+        val configRequest = ConfigRequest(
+            period = null,
+            ssid = null,
+            password = null,
+            is_periodic_sensor = isPeriodic,
+            manual_fan = null,
+            manual_heater = null,
+            manual_humidifier = null,
+            manual_humidity = if (!isSuhu && !isPeriodic) value.toInt() else 0,
+            manual_temp = if (isSuhu && !isPeriodic) value.toInt() else 0
+        )
+
+        RetrofitClient.instance.postConfig(configRequest).enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                // Optionally handle success
+                if (response.isSuccessful) {
+                    view?.context?.let {
+                        Toast.makeText(it, "Konfigurasi berhasil diperbarui", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                } else {
+                    view?.context?.let {
+                        Toast.makeText(it, "Gagal memperbarui konfigurasi", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                // Optionally handle error
+                view?.context?.let {
+                    Toast.makeText(it, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                    Log.e("NetworkError", "Failed to update config: ${t.message}", t)
+                }
+            }
+        })
     }
 
     private fun fetchSensorData() {

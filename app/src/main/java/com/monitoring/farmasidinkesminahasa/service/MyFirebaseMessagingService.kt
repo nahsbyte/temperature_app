@@ -16,6 +16,9 @@ import org.json.JSONObject
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
+    private val PREFS_NAME = "AppSettings"
+    private val PREF_FCM_ALERTS_ENABLED = "fcm_alerts_enabled"
+
     override fun onNewToken(token: String) {
         super.onNewToken(token)
         Log.d("FCM", "New token: $token")
@@ -33,13 +36,22 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 val title = json.optString("alert_type", "Farmasi Minahasa")
                 val message = json.optString("message", "Notifikasi baru")
 
-                // You can store other values or pass to Intent here
-                showNotification(title, message, rawJson)
+                // Check if notifications are enabled
+                if (shouldShowNotifications()) {
+                    showNotification(title, message, rawJson)
+                }
 
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
+    }
+
+    private fun shouldShowNotifications(): Boolean {
+        val sharedPrefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val result = sharedPrefs.getBoolean(PREF_FCM_ALERTS_ENABLED, true) // Default to enabled
+        Log.d("FCM", "Notifications enabled: $result")
+        return result
     }
 
     private fun showNotification(title: String, message: String, rawJson: String) {

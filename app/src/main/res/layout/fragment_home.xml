@@ -275,7 +275,7 @@
             android:text="Kipas Pendingin"
             android:textColor="@color/black" />
 
-        <Switch
+        <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/switchKipas"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -303,7 +303,7 @@
             android:text="Pemanas Ruangan"
             android:textColor="@color/black" />
 
-        <Switch
+        <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/switchPemanas"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -331,7 +331,7 @@
             android:text="Uap Air"
             android:textColor="@color/black" />
 
-        <Switch
+        <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/switchUap"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

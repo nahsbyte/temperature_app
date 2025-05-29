@@ -1,6 +1,7 @@
 package com.monitoring.farmasidinkesminahasa
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -41,12 +42,29 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        FirebaseMessaging.getInstance().subscribeToTopic("farmasi")
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.d("FCM", "Subscribed to topic farmasi")
+        // Check FCM subscription status based on SharedPreferences
+        val sharedPrefs = getSharedPreferences("AppSettings", Context.MODE_PRIVATE)
+        val fcmAlertsEnabled = sharedPrefs.getBoolean("fcm_alerts_enabled", true) // Default to true
+
+        if (fcmAlertsEnabled) {
+            FirebaseMessaging.getInstance().subscribeToTopic("farmasi")
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Log.d("FCM", "Successfully subscribed to topic: all")
+                    } else {
+                        Log.w("FCM", "Failed to subscribe to topic: all", task.exception)
+                    }
                 }
-            }
+        } else {
+            FirebaseMessaging.getInstance().unsubscribeFromTopic("farmasi")
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Log.d("FCM", "Successfully unsubscribed from topic: all")
+                    } else {
+                        Log.w("FCM", "Failed to unsubscribe from topic: all", task.exception)
+                    }
+                }
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 101)

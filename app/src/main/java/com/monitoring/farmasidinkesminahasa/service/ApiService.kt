@@ -1,5 +1,6 @@
 package com.monitoring.farmasidinkesminahasa.service
 
+import com.monitoring.farmasidinkesminahasa.model.ConfigRequest
 import com.monitoring.farmasidinkesminahasa.model.PeriodConfigRequest
 import com.monitoring.farmasidinkesminahasa.model.HistoryItemResponse
 import com.monitoring.farmasidinkesminahasa.model.NtfyMessage
@@ -12,9 +13,6 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
-//    @GET("/read_sensor")
-//    fun getSensorData(): Call<SensorResponse>
-//
     @GET("/sensor/tools")
     fun getTools(): Call<List<Tool>>
 
@@ -24,6 +22,9 @@ interface ApiService {
     @POST("/sensor/firebase/period-config")
     fun postPeriodConfig(@Body periodConfigRequest: PeriodConfigRequest): Call<Void>
 
+    @POST("/sensor/firebase/config")
+    fun postConfig(@Body configRequest: ConfigRequest): Call<Void>
+
     @GET("/sensor/firebase/history")
     fun getHistorySensorData(
         @Query("start") start: String,  // format: YYYY-MM-DD
@@ -32,6 +33,12 @@ interface ApiService {
 
     @POST("/sensor/wifi-config")
     fun updateWifiConfig(
+        @Query("ssid") ssid: String,
+        @Query("password") password: String
+    ): Call<Void>
+
+    @POST("/wifi")
+    fun updateWifiLocal(
         @Query("ssid") ssid: String,
         @Query("password") password: String
     ): Call<Void>
