@@ -43,6 +43,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 
 class HistoryFragment : Fragment() {
 
@@ -249,14 +250,18 @@ class HistoryFragment : Fragment() {
     }
 
     private fun convertTimestampToDate(timestamp: Long): String {
-        val date = Date(timestamp)
+        val correctedTimestamp = if (timestamp < 1000000000000L) timestamp * 1000 else timestamp
+        val date = Date(correctedTimestamp)
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        dateFormat.timeZone = TimeZone.getTimeZone("GMT")
         return dateFormat.format(date)
     }
 
     private fun convertTimestampToTime(timestamp: Long): String {
-        val date = Date(timestamp)
+        val correctedTimestamp = if (timestamp < 1000000000000L) timestamp * 1000 else timestamp
+        val date = Date(correctedTimestamp)
         val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+        timeFormat.timeZone = TimeZone.getTimeZone("GMT")
         return timeFormat.format(date)
     }
 
