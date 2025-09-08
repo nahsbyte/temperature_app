@@ -253,7 +253,7 @@ class HistoryFragment : Fragment() {
         val correctedTimestamp = if (timestamp < 1000000000000L) timestamp * 1000 else timestamp
         val date = Date(correctedTimestamp)
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        dateFormat.timeZone = TimeZone.getTimeZone("GMT")
+        dateFormat.timeZone = TimeZone.getTimeZone("GMT+1 ")
         return dateFormat.format(date)
     }
 
@@ -261,7 +261,7 @@ class HistoryFragment : Fragment() {
         val correctedTimestamp = if (timestamp < 1000000000000L) timestamp * 1000 else timestamp
         val date = Date(correctedTimestamp)
         val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
-        timeFormat.timeZone = TimeZone.getTimeZone("GMT")
+        timeFormat.timeZone = TimeZone.getTimeZone("GMT+1")
         return timeFormat.format(date)
     }
 
